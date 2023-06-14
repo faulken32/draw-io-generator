@@ -1,0 +1,25 @@
+<mxGraphModel dx="1933" dy="2044" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="1" />
+    <mxCell id="2" parent="1" />
+    <mxCell id="java 1" value="java 1" style="rounded=1;whiteSpace=wrap;html=1;" parent="2" vertex="1">
+      <mxGeometry x="-280" y="300" width="120" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="java 2" value="java 2" style="rounded=1;whiteSpace=wrap;html=1;" parent="2" vertex="1">
+      <mxGeometry x="-130" y="300" width="120" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="xp0JYK6RoG4Cw6x7pH5A-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="2" source="nginx" target="java 2" edge="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="sAIgiSx3YSUKg4rVKV2y-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+      <mxGeometry x="-239" y="-65" width="220" height="170" as="geometry" />
+    </mxCell>
+    <mxCell id="nginx" value="nginx" style="rounded=1;whiteSpace=wrap;html=1;" parent="2" vertex="1">
+      <mxGeometry x="-229" y="-55" width="120" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="xp0JYK6RoG4Cw6x7pH5A-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="2" source="nginx" target="java 1" edge="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>
+

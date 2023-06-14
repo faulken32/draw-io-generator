@@ -1,0 +1,25 @@
+<mxfile host="drawio-plugin" modified="2023-06-14T09:34:53.063Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36" version="20.5.3" etag="kIyv3O9sdK_ghAs8xbr5" type="embed">
+  <diagram id="1" name="Page-1">
+    <mxGraphModel dx="791" dy="424" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="1"/>
+        <mxCell id="2" parent="1"/>
+        <mxCell id="group-front" value="front" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry width="400" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp-nginx" value="nginx" style="rounded=1;whiteSpace=wrap;html=1;" parent="group-front" vertex="1">
+          <mxGeometry width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="group-back" value="back" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1">
+          <mxGeometry y="200" width="400" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp-java 1" value="java 1" style="rounded=1;whiteSpace=wrap;html=1;" parent="group-back" vertex="1">
+          <mxGeometry y="10" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp-java 2" value="java 2" style="rounded=1;whiteSpace=wrap;html=1;" parent="group-back" vertex="1">
+          <mxGeometry y="110" width="120" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
