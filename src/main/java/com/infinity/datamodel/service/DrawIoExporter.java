@@ -21,6 +21,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j @Service public class DrawIoExporter {
@@ -43,43 +44,54 @@ import java.util.List;
 
         int groupY = 0;
         int groupHeight = 200;
+        int groupWidth = 200;
 
         int componentX = 0;
         int componentY = 0;
         int componentWidth = 120;
 
-        int padding = 10;
+        int padding = 50;
 
         int groupNb = diagram.getGroups().size();
 
         int currentGroup = 0;
         int currentComponent = 0;
+        Group previousGroup = null;
 
         for (Group group : diagram.getGroups()) {
-            log.info("group {} x {} y {}", group.getName(), 0, groupY);
+
+            //  log.info("group {} x {} y {}", group.getName(), 0, groupY);
+
+            int nbComponentsInCurrentGroup = group.getComponents().size();
             Element groupElement = createElement(doc, root, group.getName());
 
-            createGeometry(doc, 0, groupY, 200, 400, groupElement);
+            createGeometry(doc, 0, groupY, 200, groupWidth * nbComponentsInCurrentGroup, groupElement);
 
             groupY += groupHeight + padding;
             currentGroup++;
 
             for (Component component : group.getComponents()) {
 
-                log.info("group number {} component {} x {} y {}", groupNb, component.getName(), 0, groupY);
+                // log.info("group number {} component {} x {} y {}", group.hashCode(), component.getName(), 0, groupY);
 
                 Element componentElement = createElement(doc, root, component.getName());
 
-                createGeometry(doc, componentX, componentY, 60, 120, componentElement);
+                if (previousGroup == null) {
+                    log.info("premier group");
+                } else if (groupChange(previousGroup, group)) {
+                    // Réinitialiser les compteurs ici (selon tes besoins)
+                    log.info("group suivant remise a zero  x");
 
-                if (currentComponent != 0) {
-                    componentX = componentX + componentWidth + padding;
-                }
-
-                if (currentGroup != diagram.getGroups().size()) {
+                    componentX = 0;
                     componentY = componentY + groupHeight + padding;
-                }
+                } else {
+                    log.info("toujour dans meme group x +1");
 
+                    componentX = componentX + componentWidth + padding;
+
+                }
+                createGeometry(doc, componentX, componentY, 60, 120, componentElement);
+                previousGroup = group;
                 currentComponent++;
             }
 
@@ -88,7 +100,7 @@ import java.util.List;
         List<Relation> relations = diagram.getRelations();
         for (Relation relation : relations) {
 
-            log.info("relation {} ", relation.getRelation());
+            log.info("relation {} ", relation.getRelationText());
             Element relationElement = doc.createElement("mxCell");
             relationElement.setAttribute("style",
                     "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;");
@@ -109,6 +121,10 @@ import java.util.List;
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new File("src/main/resources/data_model.xml"));
         transformer.transform(source, result);
+    }
+
+    private boolean groupChange(Group previousGroup, Group group) {
+        return previousGroup != null && !group.equals(previousGroup);
     }
 
     private static void createGeometry(Document doc, int x, int y, int height, int width, Element element) {

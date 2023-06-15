@@ -1,6 +1,11 @@
 package com.infinity.datamodel.domain;
 
-@lombok.Data public class Component {
+import lombok.Data;
+
+@Data public class Component {
 
     private String name;
+    private String technology;
+    private String documentationLink;
+
 }

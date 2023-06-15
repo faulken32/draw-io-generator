@@ -6,20 +6,37 @@ groups:
   - name: back
     components:
       - name: java 1
+        technology: Spring boot
+        documentationLink:  www.google.com
       - name: java 2
       - name: java 3
+  - name: db
+    components:
+      - name: db 1
+        technology: mySql
+        documentationLink: www.google.com
+  - name: db zone 2
+    components:
+      - name: db 2
+        technology: postgres
+        documentationLink: www.google.com
+
 
 relations:
   - name: 1
     sourceName: nginx
     destinationName: java 1
-    relation: balbla
+    relationText: balbla
+    type: API
+    functionalFlow:
+      name: toto
+      code: titis
   - name: 2
     sourceName: nginx
     destinationName: java 2
-    relation: balbla
+    relationText: balbla
   - name: 2
     sourceName: nginx
     destinationName: java 3
-    relation: balbla
+    relationText: balbla
 
