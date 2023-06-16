@@ -7,19 +7,18 @@ groups:
     components:
       - name: java 1
         technology: Spring boot
-        documentationLink:  www.google.com
+        documentationLink: https://www.google.com
       - name: java 2
       - name: java 3
   - name: db
     components:
       - name: db 1
         technology: mySql
-        documentationLink: www.google.com
   - name: db zone 2
     components:
       - name: db 2
         technology: postgres
-        documentationLink: www.google.com
+
 
 
 relations:
@@ -39,4 +38,11 @@ relations:
     sourceName: nginx
     destinationName: java 3
     relationText: balbla
-
+  - name: 2
+    sourceName: java 3
+    destinationName: db 2
+    relationText: balbla
+  - name: 2
+    sourceName: java 3
+    destinationName: db 1
+    relationText: balbla

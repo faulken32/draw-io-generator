@@ -14,15 +14,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j @Service public class DrawIoExporter {
 
@@ -52,49 +51,30 @@ import java.util.List;
 
         int padding = 50;
 
-        int groupNb = diagram.getGroups().size();
-
-        int currentGroup = 0;
-        int currentComponent = 0;
         Group previousGroup = null;
 
         for (Group group : diagram.getGroups()) {
-
-            //  log.info("group {} x {} y {}", group.getName(), 0, groupY);
-
             int nbComponentsInCurrentGroup = group.getComponents().size();
-            Element groupElement = createElement(doc, root, group.getName());
 
+            Element groupElement = createElementGroup(doc, root, group);
             createGeometry(doc, 0, groupY, 200, groupWidth * nbComponentsInCurrentGroup, groupElement);
 
             groupY += groupHeight + padding;
-            currentGroup++;
 
             for (Component component : group.getComponents()) {
 
-                // log.info("group number {} component {} x {} y {}", group.hashCode(), component.getName(), 0, groupY);
-
-                Element componentElement = createElement(doc, root, component.getName());
-
+                Element componentElement = createElementComponent(doc, root, component);
                 if (previousGroup == null) {
                     log.info("premier group");
                 } else if (groupChange(previousGroup, group)) {
-                    // Réinitialiser les compteurs ici (selon tes besoins)
-                    log.info("group suivant remise a zero  x");
-
                     componentX = 0;
                     componentY = componentY + groupHeight + padding;
                 } else {
-                    log.info("toujour dans meme group x +1");
-
                     componentX = componentX + componentWidth + padding;
-
                 }
                 createGeometry(doc, componentX, componentY, 60, 120, componentElement);
                 previousGroup = group;
-                currentComponent++;
             }
-
         }
 
         List<Relation> relations = diagram.getRelations();
@@ -108,6 +88,7 @@ import java.util.List;
             relationElement.setAttribute("parent", "2");
             relationElement.setAttribute("source", relation.getSourceName());
             relationElement.setAttribute("target", relation.getDestinationName());
+            relationElement.setAttribute("value", relation.getRelationText());
             root.appendChild(relationElement);
 
             Element mxGeometry = doc.createElement("mxGeometry");
@@ -138,16 +119,43 @@ import java.util.List;
         element.appendChild(mxGeometry);
     }
 
-    private static Element createElement(Document doc, Element root, String name) {
+    private static Element createElementGroup(Document doc, Element root, Group group) {
+
         Element groupElement = doc.createElement("mxCell");
-        groupElement.setAttribute("value", name);
         groupElement.setAttribute("parent", "2");
+        groupElement.setAttribute("id", group.getName());
+        groupElement.setAttribute("value", group.getName());
         groupElement.setAttribute("style", "rounded=1;whiteSpace=wrap;html=1;");
         groupElement.setAttribute("vertex", "1");
-        groupElement.setAttribute("id", name);
-
         root.appendChild(groupElement);
+
         return groupElement;
+    }
+
+    private static Element createElementComponent(Document doc, Element root, Component component) {
+
+        Element groupElement = doc.createElement("mxCell");
+        groupElement.setAttribute("parent", "2");
+        groupElement.setAttribute("id", component.getName());
+        if (Objects.nonNull(component.getTechnology()) && isHyperLink(component)) {
+            groupElement.setAttribute("value",
+                    "<a href=" + component.getDocumentationLink() + ">" + component.getName() + "\n"
+                            + component.getTechnology() + "</a>");
+        } else {
+            groupElement.setAttribute("value", component.getName());
+        }
+        groupElement.setAttribute("style", "rounded=1;whiteSpace=wrap;html=1;");
+        groupElement.setAttribute("vertex", "1");
+        if (isHyperLink(component)) {
+            groupElement.setAttribute("href", component.getDocumentationLink());
+        }
+        root.appendChild(groupElement);
+
+        return groupElement;
+    }
+
+    private static boolean isHyperLink(Component component) {
+        return Objects.nonNull(component) && Objects.nonNull(component.getDocumentationLink());
     }
 
     private static Document generateDocument() throws ParserConfigurationException {
