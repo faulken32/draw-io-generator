@@ -82,8 +82,19 @@ import java.util.Objects;
 
             log.info("relation {} ", relation.getRelationText());
             Element relationElement = doc.createElement("mxCell");
-            relationElement.setAttribute("style",
-                    "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;");
+
+            if (relation.getType() != null && !relation.getType().isBlank() && relation.getType().equals("event")) {
+
+                relationElement.setAttribute("style", "fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;dashed=1;");
+            } else if (relation.getType() != null && !relation.getType().isBlank() && relation.getType()
+                    .equals("file")) {
+                relationElement.setAttribute("style",
+                        "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=1 1;strokeWidth=3;");
+            } else {
+                relationElement.setAttribute("style",
+                        "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;");
+            }
+
             relationElement.setAttribute("edge", "1");
             relationElement.setAttribute("parent", "2");
             relationElement.setAttribute("source", relation.getSourceName());
@@ -137,18 +148,17 @@ import java.util.Objects;
         Element groupElement = doc.createElement("mxCell");
         groupElement.setAttribute("parent", "2");
         groupElement.setAttribute("id", component.getName());
-        if (Objects.nonNull(component.getTechnology()) && isHyperLink(component)) {
+        if (isHyperLink(component)) {
             groupElement.setAttribute("value",
-                    "<a href=" + component.getDocumentationLink() + ">" + component.getName() + "\n"
-                            + component.getTechnology() + "</a>");
+                    "<a href=" + component.getDocumentationLink() + ">" + component.getName() + "</a>");
         } else {
             groupElement.setAttribute("value", component.getName());
         }
         groupElement.setAttribute("style", "rounded=1;whiteSpace=wrap;html=1;");
         groupElement.setAttribute("vertex", "1");
-        if (isHyperLink(component)) {
-            groupElement.setAttribute("href", component.getDocumentationLink());
-        }
+        //        if (isHyperLink(component)) {
+        //            groupElement.setAttribute("href", component.getDocumentationLink());
+        //        }
         root.appendChild(groupElement);
 
         return groupElement;

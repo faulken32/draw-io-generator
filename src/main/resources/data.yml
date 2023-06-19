@@ -1,48 +1,88 @@
-name: test
+name: smartPos
 groups:
-  - name: front
+  - name: kyndril
     components:
-      - name: nginx
-  - name: back
+      - name: MetiStore
+  - name: In store
     components:
-      - name: java 1
-        technology: Spring boot
-        documentationLink: https://www.google.com
-      - name: java 2
-      - name: java 3
-  - name: db
+      - name: localPos
+      - name: masterPos
+      - name: TPE
+  - name: GCP
     components:
-      - name: db 1
-        technology: mySql
-  - name: db zone 2
+      - name: CentralPos
+        documentationLink:
+      - name: Phénix
+        technology: ddddd
+        documentationLink: https://confluence.agilefabric.fr.carrefour.com/display/PHENIX/Bienvenue+dans+l%27espace+PHENIX
+      - name: Archivage legal
+        documentationLink: https://confluence.agilefabric.fr.carrefour.com/display/SMARTP/Architecture+pour+Infocert
+  - name: Azure
     components:
-      - name: db 2
-        technology: postgres
+      - name: OnePromo
+        documentationLink: https://confluence.agilefabric.fr.carrefour.com/pages/viewpage.action?pageId=66988666
+      - name: Caroline
+  - name:
+    components:
+      - name: Nova
+      - name: Ax
+      - name: Planexa
+
+
 
 
 
 relations:
   - name: 1
-    sourceName: nginx
-    destinationName: java 1
-    relationText: balbla
+    sourceName: localPos
+    destinationName: masterPos
+    relationText: TCP/IP
+    type: TCP/IP
+  - name: 1
+    sourceName: masterPos
+    destinationName: CentralPos
+    relationText: event
+    type: event
+  - name: 2
+    sourceName: localPos
+    destinationName: TPE
+    relationText:
+  - name: 3
+    sourceName: masterPos
+    destinationName: Phénix
+    relationText: event
+    type: event
+  - name: 3
+    sourceName: CentralPos
+    destinationName: Phénix
+    relationText: event
+    type: event
+  - name: 3
+    sourceName: masterPos
+    destinationName: Archivage legal
+    relationText: event
+    type: event
+  - name: 3
+    sourceName: masterPos
+    destinationName: OnePromo
+    relationText: NO apim
     type: API
-    functionalFlow:
-      name: toto
-      code: titis
-  - name: 2
-    sourceName: nginx
-    destinationName: java 2
-    relationText: balbla
-  - name: 2
-    sourceName: nginx
-    destinationName: java 3
-    relationText: balbla
-  - name: 2
-    sourceName: java 3
-    destinationName: db 2
-    relationText: balbla
-  - name: 2
-    sourceName: java 3
-    destinationName: db 1
-    relationText: balbla
+  - name: 3
+    sourceName: localPos
+    destinationName: Caroline
+    relationText: Majart
+    type: API
+  - name: 3
+    sourceName: MetiStore
+    destinationName: localPos
+    relationText: TOMAJ KEY
+    type: API
+  - name: 3
+    sourceName: Caroline
+    destinationName: Planexa
+    relationText:
+    type: file
+  - name: 3
+    sourceName: masterPos
+    destinationName: OnePromo
+    relationText:
