@@ -4,9 +4,7 @@ import com.infinity.datamodel.domain.Component;
 import com.infinity.datamodel.domain.Diagram;
 import com.infinity.datamodel.domain.Group;
 import com.infinity.datamodel.domain.Relation;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -23,18 +21,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@Slf4j @Service public class DrawIoExporter {
+@Slf4j public class DrawIoExporter {
 
-    private final YamlParser parser;
+    public static final String MX_CELL = "mxCell";
+    public static final String STYLE = "style";
 
-    public DrawIoExporter(YamlParser parser) {
-        this.parser = parser;
-    }
-
-    @PostConstruct private void export()
+    public void export(String modelPath, String exportPath)
             throws RuntimeException, TransformerException, IOException, ParserConfigurationException {
 
-        Diagram diagram = this.parser.parseYAML();
+        log.info("start generate diagram {} from {}", exportPath, modelPath);
+
+        YamlParser yamlParser = new YamlParser();
+
+        Diagram diagram = yamlParser.parseYAML(modelPath);
 
         Document doc = generateDocument();
         Element mxFile = generateMxFile(doc);
@@ -81,17 +80,17 @@ import java.util.Objects;
         for (Relation relation : relations) {
 
             log.info("relation {} ", relation.getRelationText());
-            Element relationElement = doc.createElement("mxCell");
+            Element relationElement = doc.createElement(MX_CELL);
 
             if (relation.getType() != null && !relation.getType().isBlank() && relation.getType().equals("event")) {
 
-                relationElement.setAttribute("style", "fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;dashed=1;");
+                relationElement.setAttribute(STYLE, "fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;dashed=1;");
             } else if (relation.getType() != null && !relation.getType().isBlank() && relation.getType()
                     .equals("file")) {
-                relationElement.setAttribute("style",
+                relationElement.setAttribute(STYLE,
                         "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=1 1;strokeWidth=3;");
             } else {
-                relationElement.setAttribute("style",
+                relationElement.setAttribute(STYLE,
                         "edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;");
             }
 
@@ -111,7 +110,7 @@ import java.util.Objects;
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File("src/main/resources/data_model.xml"));
+        StreamResult result = new StreamResult(new File(exportPath));
         transformer.transform(source, result);
     }
 
@@ -132,11 +131,11 @@ import java.util.Objects;
 
     private static Element createElementGroup(Document doc, Element root, Group group) {
 
-        Element groupElement = doc.createElement("mxCell");
+        Element groupElement = doc.createElement(MX_CELL);
         groupElement.setAttribute("parent", "2");
         groupElement.setAttribute("id", group.getName());
         groupElement.setAttribute("value", group.getName());
-        groupElement.setAttribute("style", "rounded=1;whiteSpace=wrap;html=1;");
+        groupElement.setAttribute(STYLE, "rounded=1;whiteSpace=wrap;html=1;");
         groupElement.setAttribute("vertex", "1");
         root.appendChild(groupElement);
 
@@ -145,7 +144,7 @@ import java.util.Objects;
 
     private static Element createElementComponent(Document doc, Element root, Component component) {
 
-        Element groupElement = doc.createElement("mxCell");
+        Element groupElement = doc.createElement(MX_CELL);
         groupElement.setAttribute("parent", "2");
         groupElement.setAttribute("id", component.getName());
         if (isHyperLink(component)) {
@@ -154,7 +153,7 @@ import java.util.Objects;
         } else {
             groupElement.setAttribute("value", component.getName());
         }
-        groupElement.setAttribute("style", "rounded=1;whiteSpace=wrap;html=1;");
+        groupElement.setAttribute(STYLE, "rounded=1;whiteSpace=wrap;html=1;");
         groupElement.setAttribute("vertex", "1");
         //        if (isHyperLink(component)) {
         //            groupElement.setAttribute("href", component.getDocumentationLink());
@@ -210,11 +209,11 @@ import java.util.Objects;
         Element root = doc.createElement("root");
         mxGraphModel.appendChild(root);
 
-        Element mxCell = doc.createElement("mxCell");
+        Element mxCell = doc.createElement(MX_CELL);
         mxCell.setAttribute("id", "1");
         root.appendChild(mxCell);
 
-        Element mxCell2 = doc.createElement("mxCell");
+        Element mxCell2 = doc.createElement(MX_CELL);
         mxCell2.setAttribute("id", "2");
         mxCell2.setAttribute("parent", "1");
         root.appendChild(mxCell2);
