@@ -9,7 +9,7 @@ import lombok.Data;
     private String         destinationName;
     private String         relationText;
     private String         type;
-
     private FunctionalFlow functionalFlow;
+    private String         documentationLink;
 
 }

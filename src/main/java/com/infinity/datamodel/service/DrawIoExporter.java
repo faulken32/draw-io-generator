@@ -1,10 +1,9 @@
 package com.infinity.datamodel.service;
 
-import com.infinity.datamodel.domain.Component;
-import com.infinity.datamodel.domain.Diagram;
-import com.infinity.datamodel.domain.Group;
-import com.infinity.datamodel.domain.Relation;
+import com.infinity.datamodel.domain.*;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -21,19 +20,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@Slf4j public class DrawIoExporter {
+@Slf4j @Service public class DrawIoExporter {
 
     public static final String MX_CELL = "mxCell";
-    public static final String STYLE = "style";
+    public static final String STYLE   = "style";
 
-    public void export(String modelPath, String exportPath)
+    private final Conf       conf;
+    private final YamlParser yamlParser;
+
+    public DrawIoExporter(Conf conf, YamlParser yamlParser) {
+        this.conf = conf;
+        this.yamlParser = yamlParser;
+
+    }
+
+    @PostConstruct public void export()
             throws RuntimeException, TransformerException, IOException, ParserConfigurationException {
 
-        log.info("start generate diagram {} from {}", exportPath, modelPath);
+        log.info("start generate diagram {} from {}", this.conf.getExportPath(), this.conf.getModelPath());
 
-        YamlParser yamlParser = new YamlParser();
+        Diagram diagram = yamlParser.parseYAML();
 
-        Diagram diagram = yamlParser.parseYAML(modelPath);
+
+
 
         Document doc = generateDocument();
         Element mxFile = generateMxFile(doc);
@@ -110,7 +119,7 @@ import java.util.Objects;
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(exportPath));
+        StreamResult result = new StreamResult(new File(this.conf.getExportPath()));
         transformer.transform(source, result);
     }
 
